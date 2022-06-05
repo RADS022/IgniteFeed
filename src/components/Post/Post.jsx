@@ -1,40 +1,77 @@
+import { format, formatDistanceToNow } from 'date-fns';
+import ptBr from 'date-fns/locale/pt-BR'
+import { useState } from 'react';
+import { Avatar } from '../Avatar/Avatar'
 import { Comment } from '../Comment/comment'
 import styles from './Post.module.css'
 
-export function Post() {
+export function Post({ author, publishedAt, content }) {
+    const [comments, setComments] = useState([
+    ])
+
+    const [newCommentText, setNewCommentText] = useState('')
+
+    function handleCreateNewComment() {
+        event.preventDefault()
+        setComments([...comments, newCommentText]);
+        setNewCommentText('');
+    }
+
+    function handleNewComentChange() {
+        setNewCommentText(event.target.value)
+    }
+
+    const publishedDateFormatted = format(publishedAt, "dd' de 'LLLL' às 'HH:mm'h'", { locale: ptBr })
+    const publishedDateRelativeToNow = formatDistanceToNow(publishedAt, {
+        locale: ptBr,
+        addSuffix: true,
+    })
+
     return (
         <article className={styles.post}>
             <header>
                 <div className={styles.author}>
-                    <img className={styles.avatar} src="https://github.com/rads022.png" alt="" />
+                    <Avatar hasBorder={true} src={author.avatarUrl} />
                     <div className={styles.authorInfo}>
-                        <strong>Ricardo Silva</strong>
-                        <spam>Eng. de Software Jr.</spam>
+                        <strong>{author.name}</strong>
+                        <span>{author.role}</span>
                     </div>
                 </div>
-                <time title='' dateTime=''>
-                    Públicado há 1hr
+                <time title={publishedDateFormatted} dateTime={publishedAt.toISOString()}>
+                    {publishedDateRelativeToNow}
                 </time>
             </header>
+
             <div className={styles.content}>
-                <p>Fala galeraa 👋</p>
-                <p>To aqui fazendo esse site de madrugada. Morrendo de sono...mas vai sair!</p>
-                <p>Quer ver mais? 👉{' '}<a href="https://github.com/RADS022/IgniteFeed.git">Projeto no Git</a></p>
-                <p>
-                    <a href="">#programacarai </a>{' '}
-                    <a href="">#reactjs </a>{' '}
-                    <a href="">#rocketseat</a>{' '}
-                </p>
+                {content.map(line => {
+                    if (line.type === 'paragraph') {
+                        return <p key={line.content}>{line.content}</p>;
+                    } else if (line.type === 'link') {
+                        return <p key={line.content}><a href=''>{line.content}</a></p>;
+                    }
+                })}
             </div>
-            <form className={styles.commentForm}>
+
+            <form onSubmit={handleCreateNewComment} className={styles.commentForm}>
                 <strong>Deixe seu comentário</strong>
-                <textarea placeholder="Deixe seu comentário" />
-                <footer className={styles.publishButton}>
-                    <button type="submit">Publicar</button>
+                <textarea
+                    name='comment'
+                    value={newCommentText}
+                    placeholder="Deixe seu comentário"
+                    onChange={handleNewComentChange}
+                />
+                <footer
+                    className={styles.publishButton}>
+                    <button
+                        type="submit">
+                        Publicar
+                    </button>
                 </footer>
             </form>
             <div className={styles.commentList}>
-                <Comment />
+                {comments.map(comment => {
+                    return <Comment key={comment} content={comment} />
+                })}
             </div>
         </article>
     )

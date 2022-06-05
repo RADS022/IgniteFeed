@@ -44,13 +44,6 @@ color: var(--gray-400);
    align-items: center; 
    gap: 1rem;
 }
-.avatar {
-    width: calc(5rem + 12px);
-    height: calc(5rem + 12px);
-    border-radius: 130px;
-    border: 1px solid var(--gray-800);
-    outline: 2px solid var(--green-500);
-}
 .authorInfo {
     margin-right: 0.5rem;
 }
@@ -59,7 +52,7 @@ color: var(--gray-400);
     color: var(--gray-100);
     line-height: 1.6;
 }
-.authorInfo spam {
+.authorInfo span {
     display: block;
     font-size: 0.875rem;
     color: var(--gray-400);
