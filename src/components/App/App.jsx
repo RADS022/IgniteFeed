@@ -14,8 +14,7 @@ export function App() {
           <Sidebar />
         </aside>
         <main>
-          <Post/>
-          <Post/>
+          <Post />
         </main>
 
       </div>
